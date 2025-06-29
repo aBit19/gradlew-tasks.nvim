@@ -1,3 +1,9 @@
+local has_toggleterm, toggleterm = pcall(require, "toggleterm")
+
+if not has_toggleterm then
+  error(" gradlew-tasks.nvim requires toggleterm.nvim -https://github.com/akinsho/toggleterm.nvim")
+end
+
 local M = {}
 
 local pickers = require("telescope.pickers")
@@ -39,7 +45,17 @@ local get_tasks = function(opts)
           actions.close(prompt_bufnr)
           local selection = action_state.get_selected_entry()
           --print(vim.inspect(selection))
-          vim.api.nvim_command(":terminal ./gradlew " .. selection.value.task)
+          --vim.api.nvim_command(":terminal ./gradlew " .. selection.value.task)
+          toggleterm.exec(
+            "./gradlew " .. selection.value.task,
+            1,
+            nil,
+            nil,
+            "float",
+            "Running: " .. selection.value.task,
+            true,
+            true
+          )
         end)
         return true
       end,
